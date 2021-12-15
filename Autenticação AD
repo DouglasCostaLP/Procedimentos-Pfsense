@@ -1,0 +1,36 @@
+Autor: Douglas Costa – filacs90@gmail.com
+Data Criação: 10/12/2021
+Descrição: Procedimento para configurar o serviço de Proxy do firewall pfSense com autenticação integrada ao ActiveDirectory através do protocolo Kerberos.
+
+
+
+Introdução
+
+O presente procedimento demonstra como configurar a integração do firewall pfSense com autenticação no ActiveDirectory no módulo de filtro de internet (Squid Web Proxy).
+O procedimento consiste em:
+
+    1. Criar uma conta de serviço que será configurada no firewall pfSense e utilizada pelo serviço do Squid.
+    2. Criar um arquivo .Keytab (usado para autenticar o serviço do squid sem uso de senhas) e transferir para o firewall.
+    3. Testar autenticação da conta de serviço no firewall usando o arquivo .Keytab gerado.
+    4. Configurar o serviço de Kerberos no firewall pfSense.
+    5. Configurar o serviço do Squid Proxy Filter no pfSense para utilizar a autenticação de usuário através do protocolo Kerberos.
+
+
+Pré-Requisitos
+Para a configuração a seguir, será necessário que tenha em mãos os seguintes dados:
+    • Acesso ao console do pfSense via SSH com usuário admin/root.
+    • Acesso a um servidor ActiveDirectory configurado como Controlador de Domínio.
+    • Conta de usuário Administrador do domínio (para geração de Service Principal Name e Keytab).
+    • Configurar o firewall com um nome padronizado.
+    • Configurar o DNS do firewall apontando para os servidores de ActiveDirectory.
+    • Desabilitar os serviços de DNS Forwarder e DNS Resolver do firewall.
+    • Pacotes Squid Proxy Server e Squid Guard instalados no Pfsense.
+    • Configurar zona reversa no serviço DNS do ActiveDirectory.
+    • Criar uma entrada de DNS na zona reversa que resolva o ip/hostname do firewall.
+    • Os clientes devem ser configurados para utilizar proxy. O endereço do proxy nas opções de internet deve ser o hostname do firewall no formato FQDN (firewall.dominio.tld) e a porta padrão 3128.
+  
+  Configuração
+    1. Acessar o servidor ActiveDirectory e criar a conta de usuário com login igual  ao hostname do firewall. Lembre-se de marcar a opção para a conta de usuário não expirar a senha, e o usuário não poder trocá-la.
+ 
+    
+    
